@@ -123,23 +123,25 @@ class GatedConv2d(nn.Module):
 
         # Initialize the convolution layer
         if sn:
-            self.conv = SpectralNorm(nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding = 0, dilation = dilation))
+            self.conv2d = SpectralNorm(nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding = 0, dilation = dilation))
             self.mask_conv = SpectralNorm(nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding = 0, dilation = dilation))
         else:
-            self.conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding = 0, dilation = dilation)
+            self.conv2d = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding = 0, dilation = dilation)
             self.mask_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding = 0, dilation = dilation)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         x = self.pad(x)
-        conv = self.conv(x)
-        gated_mask = self.sigmoid(self.mask_conv(x))
+        conv = self.conv2d(x)
+        mask = self.mask_conv(x)
+        gated_mask = self.sigmoid(mask)
         x = conv * gated_mask
         if self.norm:
             x = self.norm(x)
         if self.activation:
             x = self.activation(x)
         return x
+
 
 class TransposeGatedConv2d(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride = 1, padding = 0, 
@@ -148,7 +150,7 @@ class TransposeGatedConv2d(nn.Module):
         # Initialize the conv scheme
         self.scale_factor = scale_factor
         self.gated_conv2d = GatedConv2d(in_channels, out_channels, kernel_size, stride, 
-            padding, dilation, pad_type, activation, norm, sn)
+            padding, pad_type, dilation, activation, norm, sn)
     
     def forward(self, x):
         x = F.interpolate(x, scale_factor = self.scale_factor, mode = 'nearest')
@@ -328,8 +330,8 @@ class ContextualAttention(nn.Module):
         k = self.fuse_k
         scale = self.softmax_scale    # to fit the PyTorch tensor image value range
         fuse_weight = torch.eye(k).view(1, 1, k, k)  # 1*1*k*k
-        if self.use_cuda:
-            fuse_weight = fuse_weight.cuda()
+        # if self.use_cuda:
+        #     fuse_weight = fuse_weight.cuda()
 
         for xi, wi, raw_wi in zip(f_groups, w_groups, raw_w_groups):
             '''
@@ -341,8 +343,8 @@ class ContextualAttention(nn.Module):
             '''
             # conv for compare
             escape_NaN = torch.FloatTensor([1e-4])
-            if self.use_cuda:
-                escape_NaN = escape_NaN.cuda()
+            # if self.use_cuda:
+            #     escape_NaN = escape_NaN.cuda()
             wi = wi[0]  # [L, C, k, k]
             max_wi = torch.sqrt(reduce_sum(torch.pow(wi, 2) + escape_NaN, axis=[1, 2, 3], keepdim=True))
             wi_normed = wi / max_wi
