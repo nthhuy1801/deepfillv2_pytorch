@@ -1,11 +1,11 @@
 import argparse
-import time
+import os
 
 
-class TrainOptions():
+class TrainOptions:
     def __init__(self):
         self.parser = argparse.ArgumentParser()
-        self.initialized = True
+        self.initialized = False
 
     def initialize(self):
         # Network parameters
@@ -36,16 +36,53 @@ class TrainOptions():
         self.parser.add_argument('--lambda_perceptual', type=float, default=10, help='the parameter of FML1Loss (perceptual loss)')
         self.parser.add_argument('--lambda_gan', type=float, default=1, help='the parameter of valid loss of AdaReconL1Loss; 0 is recommended')
         self.parser.add_argument('--num_workers', type=int, default=4, help='number of cpu threads to use during batch generation')
-
-        self.parser.add_argument('--save_path', type=str, default='./models', help='thư mục lưu model')
+        # Training
+        self.parser.add_argument('--save_path', type=str, default='./save_models', help='thư mục lưu model')
         self.parser.add_argument('--gpu_ids', type=str, default="0", help='GPU ids to be used: e.g. 0  0,1,2, 0,2. use -1 for CPU')
         self.parser.add_argument('--gan_type', type=str, default='WGAN', help='the type of GAN for training')
 
         self.initialized = True
 
-    def parser(self):
+    def parse(self):
         if not self.initialized:
             self.initialize()
         self.opt = self.parser.parse_args()
 
         self.print_options(self.opt)
+        str_ids = self.opt.gpu_ids.split(',')
+        self.opt.gpu_ids = []
+        for str_id in str_ids:
+            id = int(str_id)
+            if id >= 0:
+                self.opt.gpu_ids.append(str(id))
+
+        if len(self.opt.gpu_ids) > 0:
+            os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(self.opt.gpu_ids)
+
+        if not os.path.isdir(self.opt.baseroot):
+            os.mkdir(self.opt.baseroot)
+
+        args = vars(self.opt)
+
+        print("-" * 20 + " Options " + "-" * 20)
+        for k, v in sorted(args.items()):
+            print(str(k), ":", str(v))
+        print("-" * 20 + " End " + "-" * 20)
+
+        return self.opt
+
+    def print_options(self, opt):
+        message = ''
+        message += '----------------- Options ---------------\n'
+        for k, v in sorted(vars(opt).items()):
+            comment = ''
+            default = self.parser.get_default(k)
+            if v != default:
+                comment = '\t[default: %s]' % str(default)
+            message += '{:>25}: {:<30}{}\n'.format(str(k), str(v), comment)
+        message += '----------------- End -------------------'
+        print(message)
+
+if __name__=='__main__':
+    options = TrainOptions()
+    args = options.parse()
