@@ -10,7 +10,7 @@ sys.path.append(a)
 import torch
 import torch.nn as nn
 from module import *
-
+from torchvision.models import vgg16
 
 
 
@@ -199,6 +199,28 @@ class Discriminator(nn.Module):
         x = self.block6(x)                                      # out: [B, 256, 8, 8]
         return x
 
+# Perceptual network
+# VGG-16 conv4_3 features
+class PerceptualNetwork(nn.Module):
+    def __init__(self):
+        super(PerceptualNetwork, self).__init__()
+        block = [
+            vgg16(pretrained=True).features[:15].eval()
+        ]
+        for p in block[0]:
+            p.requires_grad = False
+        self.block = nn.ModuleList(block)
+        self.transform = F.interpolate
+        self.register_buffer('mean', torch.FloatTensor([0.485, 0.456, 0.406]).view(1,3,1,1))
+        self.register_buffer('std', torch.FloatTensor([0.229, 0.224, 0.225]).view(1,3,1,1))
+
+    def forward(self, x):
+        x = (x-self.mean) / self.std
+        x = self.transform(x, mode='bilinear', size=(224, 224), align_corners=False)
+        for block_ in self.block:
+            x = block_(x)
+        return x
+        
 if __name__ == "__main__":
     from attrdict import AttrDict
     from torchsummary import summary
@@ -214,5 +236,5 @@ if __name__ == "__main__":
     # model = Generator(args)
     # print(summary(model, [(3,256,256), (1,256,256)]))
     model = Discriminator(args)
-    print(model)
+    # print(model)
     print(summary(model, [(3,256,256), (1,256,256)]))
