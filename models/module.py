@@ -30,7 +30,7 @@ class Conv2dLayer(nn.Module):
         else:
             assert 0, "Unsupported normalization: {}".format(norm)
         
-        # Initialize the activation funtion
+        # Initialize the activation function
         if activation == 'ReLU':
             self.activation = nn.ReLU(inplace = True)
         elif activation == 'LeakyReLU':

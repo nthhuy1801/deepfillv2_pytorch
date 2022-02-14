@@ -10,11 +10,7 @@ sys.path.append(a)
 # -------------------------
 
 import torch
-import torch.nn as nn
 from torch.utils.data import Dataset
-from torchvision import transforms
-import cv2
-import numpy as np
 from utils.create_mask import *
 
 class InpaintDataset(Dataset):
