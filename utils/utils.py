@@ -1,9 +1,11 @@
 import os
+from pyexpat import model
 import numpy as np
 import cv2
 import torch
 import torch.nn as nn
 import torchvision
+from models import model
 
 #### Network ####
 def extract_image_patches(images, ksizes, strides, rates, padding='same'):
@@ -76,3 +78,52 @@ def reduce_sum(x, axis=None, keepdim=False):
     for i in sorted(axis, reverse=True):
         x = torch.sum(x, dim=i, keepdim=keepdim)
     return x
+
+
+# ------------- Network ------------- #
+def create_generator(opt):
+    # Init generator 
+    generator = model.Generator(opt)
+    # Neu chua load model thi load len
+    if opt.load_name:
+        generator = load_dict(generator, opt.load_name)
+    else:
+        model.weights_init(generator, init_type=opt.init_type, init_gain=opt.init_gain)
+        print("Generator is created with {} initialization type".format(opt.init_type))
+    return generator
+
+def create_discriminator(opt):
+    # Init discriminator 
+    discriminator = model.Discriminator(opt)
+    # Neu chua load model thi load len
+    if opt.load_name:
+        discriminator = load_dict(discriminator, opt.load_name)
+    else:
+        model.weights_init(discriminator, init_type=opt.init_type, init_gain=opt.init_gain)
+        print("Discriminator is created with {} initialization type".format(opt.init_type))
+    return discriminator
+
+def create_perceptualnet():
+    # Get the first 15 layers of vgg16, which is conv3_3
+    perceptualnet = model.PerceptualNet()
+    # Pre-trained VGG-16
+    vgg16 = torch.load('./vgg16_pretrained.pth')
+    load_dict(perceptualnet, vgg16)
+    # It does not gradient
+    for param in perceptualnet.parameters():
+        param.requires_grad = False
+    print('Perceptual network is created!')
+    return perceptualnet
+
+def load_dict(process_net, pretrained_net):
+    # Get the dict from pre-trained network
+    pretrained_dict = pretrained_net
+    # Get the dict from processing network
+    process_dict = process_net.state_dict()
+    # Delete the extra keys of pretrained_dict that do not belong to process_dict
+    pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in process_dict}
+    # Update process_dict using pretrained_dict
+    process_dict.update(pretrained_dict)
+    # Load the updated dict to processing network
+    process_net.load_state_dict(process_dict)
+    return process_net

@@ -38,8 +38,11 @@ class TrainOptions:
         self.parser.add_argument('--num_workers', type=int, default=4, help='number of cpu threads to use during batch generation')
         # Training
         self.parser.add_argument('--save_path', type=str, default='./save_models', help='thư mục lưu model')
+        self.parser.add_argument('--sample_path', type = str, default = './samples', help = 'training samples path that is a folder')
         self.parser.add_argument('--gpu_ids', type=str, default="0", help='GPU ids to be used: e.g. 0  0,1,2, 0,2. use -1 for CPU')
+        self.parser.add_argument('--load_name', type = str, default = '', help = 'load model name')
         self.parser.add_argument('--gan_type', type=str, default='WGAN', help='the type of GAN for training')
+        self.parser.add_argument('--cudnn_benchmark', type = bool, default = True, help = 'True for unchanged input data type')
 
         self.initialized = True
 
