@@ -1,5 +1,6 @@
 import os
 import time
+import datetime
 import pickle as pkl
 import torch
 import numpy as np
@@ -7,7 +8,7 @@ import torch.nn as nn
 import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
 from models.model import weights_init
-from utils.utils import create_generator, create_discriminator, create_perceptualnet
+from utils.utils import create_generator, create_discriminator, create_perceptualnet, save_sample_png
 from dataset.dataset import InpaintDataset
 
 class WGANTrainer():
@@ -19,7 +20,11 @@ class WGANTrainer():
     def __init__(self, opt):
         self.opt = opt
 
-        cudnn.benchmark = opt.cudnn.benchmark
+        # self.lr_g = opt.lr_g
+        # self.lr_d = opt.lr_d
+        # self.b1 = opt.b1
+        # self.b2 = opt.b2
+        # cudnn.benchmark = opt.cudnn.benchmark
 
         # configurations
         self.save_folder = opt.save_path
@@ -47,7 +52,7 @@ class WGANTrainer():
 
 
     # Save model
-    def save(self, net, epoch, opt):
+    def save(self, epoch):
         # model_name = os.path.join(self.save_folder, f'deepfillv2_wgan_epoch_{epoch}_{opt.batch_size}.pth')
         """[function to save model]
         Args:
@@ -145,3 +150,52 @@ class WGANTrainer():
                 loss_D.backward()
                 optimizer_d.step()
 
+                # Train generator
+                optimizer_g.zero_grad()
+
+                # Mask L1 Loss
+                first_MaskL1Loss = L1Loss(first_out_whole_img, img)
+                second_MaskL1Loss = L1Loss(second_out_whole_img, img)
+
+                # GAN Loss
+                fake_scalar = self.D(second_out_whole_img, mask)
+                GAN_Loss = - torch.mean(fake_scalar)
+
+                # Get the deep semantic feature maps, and compute Perceptual Loss
+                img_featuremaps = self.percep_net(img)                            # feature maps
+                second_out_wholeimg_featuremaps = self.percep_net(second_out_whole_img)
+                second_PerceptualLoss = L1Loss(second_out_wholeimg_featuremaps, img_featuremaps)
+
+                # Compute losses
+                loss = opt.lambda_l1 * first_MaskL1Loss + opt.lambda_l1 * second_MaskL1Loss + \
+                    opt.lambda_perceptual * second_PerceptualLoss + opt.lambda_gan * GAN_Loss
+                loss.backward()
+                optimizer_g.step()
+
+                # Determine approximate time left
+                batches_done = epoch * len(dataloader) + batch_idx
+                batches_left = opt.epochs * len(dataloader) - batches_done
+                time_left = datetime.timedelta(seconds = batches_left * (time.time() - start_time))
+                start_time = time.time()
+
+                # Print log
+                print("\r[Epoch {}/{}] [Batch {}/{}] [First Mask L1 Loss: {:.4f}] [Second Mask L1 Loss: {:.4f}]".format(
+                    ((epoch + 1), opt.epochs, batch_idx, len(dataloader), first_MaskL1Loss.item(), second_MaskL1Loss.item())))
+                print("\r[D Loss: %.5f] [G Loss: %.5f] [Perceptual Loss: %.5f] time_left: %s" %
+                    (loss_D.item(), GAN_Loss.item(), second_PerceptualLoss.item(), time_left))
+                print('-'*30)
+            # Learning rate decrease
+        self.adjust_learning_rate(opt.lr_g, optimizer_g, (epoch + 1), opt)
+        self.adjust_learning_rate(opt.lr_d, optimizer_d, (epoch + 1), opt)
+
+        # Save the model
+        self.save((epoch + 1))
+
+        ### Sample data every epoch
+        masked_img = img * (1 - mask) + mask
+        mask = torch.cat((mask, mask, mask), 1)
+        if (epoch + 1) % 1 == 0:
+            img_list = [img, mask, masked_img, first_out, second_out]
+            name_list = ['gt', 'mask', 'masked_img', 'first_out', 'second_out']
+            save_sample_png(sample_folder = self.sample_folder, sample_name = 'epoch%d' % (epoch + 1), img_list = img_list, 
+                            name_list = name_list, pixel_max_cnt = 255)

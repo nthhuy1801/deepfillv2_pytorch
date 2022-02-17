@@ -127,3 +127,18 @@ def load_dict(process_net, pretrained_net):
     # Load the updated dict to processing network
     process_net.load_state_dict(process_dict)
     return process_net
+
+def save_sample_png(sample_folder, sample_name, img_list, name_list, pixel_max_cnt = 255):
+    # Save image one-by-one
+    for i in range(len(img_list)):
+        img = img_list[i]
+        # Recover normalization: * 255 because last layer is sigmoid activated
+        img = img * 255
+        # Process img_copy and do not destroy the data of img
+        img_copy = img.clone().data.permute(0, 2, 3, 1)[0, :, :, :].cpu().numpy()
+        img_copy = np.clip(img_copy, 0, pixel_max_cnt)
+        img_copy = img_copy.astype(np.uint8)
+        # Save to certain path
+        save_img_name = sample_name + '_' + name_list[i] + '.png'
+        save_img_path = os.path.join(sample_folder, save_img_name)
+        cv2.imwrite(save_img_path, img_copy)

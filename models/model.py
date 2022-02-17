@@ -9,7 +9,7 @@ sys.path.append(a)
 
 import torch
 import torch.nn as nn
-from module import *
+from models.module import *
 from torchvision.models import vgg16
 
 
