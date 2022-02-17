@@ -105,7 +105,7 @@ def create_discriminator(opt):
 
 def create_perceptualnet():
     # Get the first 15 layers of vgg16, which is conv3_3
-    perceptualnet = model.PerceptualNet()
+    perceptualnet = model.PerceptualNetwork()
     # Pre-trained VGG-16
     vgg16 = torch.load('./vgg16_pretrained.pth')
     load_dict(perceptualnet, vgg16)
