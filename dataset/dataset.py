@@ -1,6 +1,7 @@
 # -------------------------
 import os
 import sys
+from tkinter import ALL
 myDir = os.getcwd()
 sys.path.append(myDir)
 from pathlib import Path
@@ -13,14 +14,15 @@ import torch
 from torch.utils.data import Dataset
 from utils.create_mask import *
 
+ALLMASKTYPES = ['single_bbox', 'bbox', 'free_form']
 class InpaintDataset(Dataset):
     def __init__(self, opt):
         super(InpaintDataset, self).__init__()
         self.opt = opt
+        assert opt.mask_type in ALLMASKTYPES
         
         # Read folder, return full path
         self.img_list = []
-        self.mask_list = opt.mask_dir
         for root, dirs, files in os.walk(opt.baseroot):
             for filepaths in files:
                 self.img_list.append(os.path.join(root, filepaths))
@@ -35,9 +37,16 @@ class InpaintDataset(Dataset):
         img = cv2.resize(img, (self.opt.img_size, self.opt.img_size))
 
         # Read mask
-        mask = cv2.imread(self.mask_list[index])
-        mask = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        mask = cv2.resize(mask, (self.opt.img_size, self.opt.img_size))
+        # mask = cv2.imread(self.mask_list[index])
+        # mask = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        # mask = cv2.resize(mask, (self.opt.img_size, self.opt.img_size))
+
+        if self.opt.mask_type == 'single_bbox':
+            mask = bbox2mask(shape=self.opt.img_size, margin = self.opt.margin, bbox_shape = self.opt.bbox_shape, times = 1)
+        elif self.opt.mask_type == 'bbox':
+            mask = bbox2mask(shape = self.opt.imgsize, margin = self.opt.margin, bbox_shape = self.opt.bbox_shape, times = self.opt.mask_num)
+        elif self.opt.mask_type == 'free_form':
+            mask = create_ff_mask(shape = self.opt.imgsize, max_angle = self.opt.max_angle, max_len = self.opt.max_len, max_width = self.opt.max_width, times = self.opt.mask_num)
 
         img = torch.from_numpy(img.astype(np.float32) / 255.0).permute(2, 0, 1).contiguous()
         mask = torch.from_numpy(mask.astype(np.float32)).permute(2, 0, 1).contiguous()
