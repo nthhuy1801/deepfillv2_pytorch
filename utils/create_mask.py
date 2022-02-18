@@ -8,8 +8,8 @@ def create_ff_mask(shape, max_angle = 4, max_len = 40, max_width = 10, times = 1
     # h,w = config['img_shape']
     # mask = np.zeros((h,w))
     # num_v = np.random.randint(config['times'])
-    height = shape[0]
-    width = shape[1]
+    height = shape
+    width = shape
     mask = np.zeros((height, width), np.float32)
     times = np.random.randint(times)
 

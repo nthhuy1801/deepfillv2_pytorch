@@ -124,7 +124,7 @@ class WGANTrainer():
 
         # training loop
         for epoch in range(opt.epochs):
-            for batch_idx, (img, mask) in dataloader:
+            for batch_idx, (img, mask) in enumerate(dataloader):
                 # Load mask (shape: [B, 1, H, W]), masked_img (shape: [B, 3, H, W]), 
                 # img (shape: [B, 3, H, W]) and put it to cuda
                 img = img.cuda()

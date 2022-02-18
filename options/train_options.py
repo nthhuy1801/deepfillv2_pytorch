@@ -22,6 +22,11 @@ class TrainOptions:
         self.parser.add_argument('--mask_type', type=str, default='free_form', help='Mask type: free form, bounding box')
         self.parser.add_argument('--image_size', type=int, default=256, help='Resize image in training set to this size')
         self.parser.add_argument('--dataset', type=str, default='celeba-hq', help="Dataset name for training")
+        self.parser.add_argument('--mask_num', type = int, default = 15, help = 'number of mask')
+        self.parser.add_argument('--bbox_shape', type = int, default = 30, help = 'margin of image for bbox mask')
+        self.parser.add_argument('--max_angle', type = int, default = 4, help = 'parameter of angle for free form mask')
+        self.parser.add_argument('--max_len', type = int, default = 40, help = 'parameter of length for free form mask')
+        self.parser.add_argument('--max_width', type = int, default = 10, help = 'parameter of width for free form mask')
         # Training parameters
         self.parser.add_argument('--epochs', type=int, default=100, help='Numbers of epochs training')
         self.parser.add_argument('--batch_size', type=int, default=1, help='Batch size uses during training')
