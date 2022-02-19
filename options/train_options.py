@@ -13,9 +13,9 @@ class TrainOptions:
         self.parser.add_argument('--out_channels', type=int, default=3, help='Output RGB image')
         self.parser.add_argument('--latent_channels', type=int, default=64, help='Latent channels')
         self.parser.add_argument('--pad_type', type=str, default='zero', help='Padding types: zero, reflect, replicate')
-        self.parser.add_argument('--activation', type=str, default='LeakyReLU', help='Activation types: ReLU, LeakyReLU, ELU, SELU, PReLU, Tanh, Sigmoid, none')
+        self.parser.add_argument('--activation', type=str, default='ELU', help='Activation types: ReLU, LeakyReLU, ELU, SELU, PReLU, Tanh, Sigmoid, none')
         self.parser.add_argument('--norm', type=str, default = 'in', help = 'normalization type')
-        self.parser.add_argument('--init_type', type=str, default='xavier', help='network initialization [normal|xavier|kaiming|orthogonal]')
+        self.parser.add_argument('--init_type', type=str, default='kaiming', help='network initialization [normal|xavier|kaiming|orthogonal]')
         self.parser.add_argument('--init_gain', type=float, default=0.02, help='The initialized gain')
         # Dataset parameter
         self.parser.add_argument('--baseroot', type=str, default='/home/huynth/deepfillv2_thesis/data/place2', help='the training image folder')
