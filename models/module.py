@@ -345,8 +345,8 @@ class ContextualAttention(nn.Module):
             '''
             # conv for compare
             escape_NaN = torch.FloatTensor([1e-4])
-            # if self.use_cuda:
-            #     escape_NaN = escape_NaN.cuda()
+            if self.use_cuda:
+                escape_NaN = escape_NaN.cuda()
             wi = wi[0]  # [L, C, k, k]
             max_wi = torch.sqrt(reduce_sum(torch.pow(wi, 2) + escape_NaN, axis=[1, 2, 3], keepdim=True))
             wi_normed = wi / max_wi

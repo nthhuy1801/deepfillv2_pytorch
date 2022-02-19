@@ -103,7 +103,7 @@ def WGANTrainer(opt):
     Tensor = torch.cuda.FloatTensor
 
         # training loop
-    for epoch in range(opt.resume_epochs, opt.epochs):
+    for epoch in range(opt.resume_epoch, opt.epochs):
         for batch_idx, (img, mask) in enumerate(dataloader):
             # Load mask (shape: [B, 1, H, W]), masked_img (shape: [B, 3, H, W]), 
             # img (shape: [B, 3, H, W]) and put it to cuda
@@ -114,19 +114,19 @@ def WGANTrainer(opt):
             optimizer_d.zero_grad()
 
             # Generator ouput
-            first_out, second_out = self.G(img, mask)
+            first_out, second_out = generator(img, mask)
 
             # Forward propagation
             first_out_whole_img = img * (1 - mask) + first_out * mask        # in range [0, 1]
             second_out_whole_img = img * (1 - mask) + second_out * mask      # in range [0, 1]
 
             # Fake samples
-            fake_scalar = self.D(second_out_whole_img.detach(), mask)
+            fake_scalar = discriminator(second_out_whole_img.detach(), mask)
             # True samples
-            true_scalar = self.D(img, mask)
+            true_scalar = discriminator(img, mask)
 
             # Overall Loss and optimize
-            loss_D = torch.mean(fake_scalar) - torch.mean(true_scalar)
+            loss_D =  - torch.mean(true_scalar) + torch.mean(fake_scalar)
             loss_D.backward()
             optimizer_d.step()
 
@@ -138,12 +138,12 @@ def WGANTrainer(opt):
             second_MaskL1Loss = L1_loss(second_out_whole_img, img)
 
             # GAN Loss
-            fake_scalar = discriminator(second_out_wholeimg, mask)
+            fake_scalar = discriminator(second_out_whole_img, mask)
             GAN_Loss = -torch.mean(fake_scalar)
 
             # Get the deep semantic feature maps, and compute Perceptual Loss
             img_featuremaps = perceptualnet(img)                            # feature maps
-            second_out_wholeimg_featuremaps =perceptualnet(second_out_whole_img)
+            second_out_wholeimg_featuremaps = perceptualnet(second_out_whole_img)
             second_PerceptualLoss = L1_loss(second_out_wholeimg_featuremaps, img_featuremaps)
 
             # Compute losses
@@ -155,14 +155,13 @@ def WGANTrainer(opt):
             # Determine approximate time left
             batches_done = epoch * len(dataloader) + batch_idx
             batches_left = opt.epochs * len(dataloader) - batches_done
-            time_left = datetime.timedelta(seconds = batches_left * (time.time() - start_time))
+            time_left = (time.time() - start_time))
             start_time = time.time()
 
             # Print log
-            print("\r[Epoch {}/{}] [Batch {}/{}] [First Mask L1 Loss: {:.4f}] [Second Mask L1 Loss: {:.4f}]".format(
-                ((epoch + 1), opt.epochs, batch_idx, len(dataloader), first_MaskL1Loss.item(), second_MaskL1Loss.item())))
-            print("\r[D Loss: %.5f] [G Loss: %.5f] [Perceptual Loss: %.5f] time_left: %s" %
-                (loss_D.item(), GAN_Loss.item(), second_PerceptualLoss.item(), time_left))
+            print("\r[Epoch {}/{}] [Batch {}/{}] [First Mask L1 Loss: {:.4f}] [Second Mask L1 Loss: {:.4f}]".format((epoch + 1), opt.epochs, batch_idx, len(dataloader), first_MaskL1Loss.item(), second_MaskL1Loss.item()))
+            print("\r[D Loss: {:.4f}] [G Loss: {:.4f}] [Perceptual Loss: {:.4f}] time_left: {}" .format(
+                loss_D.item(), GAN_Loss.item(), second_PerceptualLoss.item(), time_left))
             print('-'*50)
         # Learning rate decrease
         adjust_learning_rate(opt.lr_g, optimizer_g, (epoch + 1), opt)
@@ -178,5 +177,5 @@ def WGANTrainer(opt):
         if (epoch + 1) % 1 == 0:
             img_list = [img, mask, masked_img, first_out, second_out]
             name_list = ['gt', 'mask', 'masked_img', 'first_out', 'second_out']
-            save_sample_png(sample_folder = self.sample_folder, sample_name = 'epoch%d' % (epoch + 1), img_list = img_list, 
+            save_sample_png(sample_folder = sample_folder, sample_name = 'epoch%d' % (epoch + 1), img_list = img_list, 
                             name_list = name_list, pixel_max_cnt = 255)
