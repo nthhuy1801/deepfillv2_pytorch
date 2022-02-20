@@ -31,6 +31,7 @@ class TrainOptions:
         self.parser.add_argument('--epochs', type=int, default=100, help='Numbers of epochs training')
         self.parser.add_argument('--resume', action='store_true')
         self.parser.add_argument('--resume_epoch', type = int, default = 0)
+        self.parser.add_argument('--checkpoint_interval', type=int, default=1, help='')
         self.parser.add_argument('--batch_size', type=int, default=1, help='Batch size uses during training')
         self.parser.add_argument('--lr_g', type=float, default=1e-4, help='Hệ số learning rate của hàm tối ưu Adam của generator')
         self.parser.add_argument('--lr_d', type=float, default=4e-4, help='Hệ số learning rate của hàm tối ưu Adam của discriminator')
