@@ -100,7 +100,7 @@ def WGANTrainer(opt):
     start_time = time.time()
 
     # Create Tensor cuda
-    Tensor = torch.cuda.FloatTensor
+    # Tensor = torch.cuda.FloatTensor
 
         # training loop
     for epoch in range(opt.resume_epoch, opt.epochs):
@@ -155,7 +155,7 @@ def WGANTrainer(opt):
             # Determine approximate time left
             batches_done = epoch * len(dataloader) + batch_idx
             batches_left = opt.epochs * len(dataloader) - batches_done
-            time_left = (time.time() - start_time))
+            time_left = time.time() - start_time
             start_time = time.time()
 
             # Print log
@@ -169,7 +169,7 @@ def WGANTrainer(opt):
 
         # Save the model
         save_model_generator(generator, (epoch + 1), opt)
-        save_model_discriminator(discriminator, (epoch + 1), opt)
+        save_model_disc(discriminator, (epoch + 1), opt)
 
         ### Sample data every epoch
         masked_img = img * (1 - mask) + mask

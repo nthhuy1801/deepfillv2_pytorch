@@ -108,6 +108,8 @@ class GatedConv2d(nn.Module):
         # Initialize the activation funtion
         if activation == 'ReLU':
             self.activation = nn.ReLU(inplace = True)
+        elif activation == 'ELU':
+            self.activation = nn.ELU()
         elif activation == 'LeakyReLU':
             self.activation = nn.LeakyReLU(0.2, inplace = True)
         elif activation == 'PReLU':
@@ -332,8 +334,8 @@ class ContextualAttention(nn.Module):
         k = self.fuse_k
         scale = self.softmax_scale    # to fit the PyTorch tensor image value range
         fuse_weight = torch.eye(k).view(1, 1, k, k)  # 1*1*k*k
-        # if self.use_cuda:
-        #     fuse_weight = fuse_weight.cuda()
+        if self.use_cuda:
+            fuse_weight = fuse_weight.cuda()
 
         for xi, wi, raw_wi in zip(f_groups, w_groups, raw_w_groups):
             '''
