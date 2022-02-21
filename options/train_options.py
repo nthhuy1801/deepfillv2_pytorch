@@ -23,6 +23,7 @@ class TrainOptions:
         self.parser.add_argument('--image_size', type=int, default=256, help='Resize image in training set to this size')
         self.parser.add_argument('--dataset', type=str, default='celeba-hq', help="Dataset name for training")
         self.parser.add_argument('--mask_num', type = int, default = 15, help = 'number of mask')
+        self.parser.add_argument('--margin', type = int, default = 10, help = 'margin of image')
         self.parser.add_argument('--bbox_shape', type = int, default = 30, help = 'margin of image for bbox mask')
         self.parser.add_argument('--max_angle', type = int, default = 4, help = 'parameter of angle for free form mask')
         self.parser.add_argument('--max_len', type = int, default = 40, help = 'parameter of length for free form mask')
@@ -34,13 +35,13 @@ class TrainOptions:
         self.parser.add_argument('--checkpoint_interval', type=int, default=1, help='')
         self.parser.add_argument('--batch_size', type=int, default=1, help='Batch size uses during training')
         self.parser.add_argument('--lr_g', type=float, default=1e-4, help='Hệ số learning rate của hàm tối ưu Adam của generator')
-        self.parser.add_argument('--lr_d', type=float, default=4e-4, help='Hệ số learning rate của hàm tối ưu Adam của discriminator')
+        self.parser.add_argument('--lr_d', type=float, default=1e-4, help='Hệ số learning rate của hàm tối ưu Adam của discriminator')
         self.parser.add_argument('--b1', type=float, default=0.5, help='Adam: beta 1')
         self.parser.add_argument('--b2', type=float, default=0.999, help='Adam: beta 2')
         self.parser.add_argument('--weight_decay', type=float, default=0, help='Weight decay of Adam optimizer')
         self.parser.add_argument('--lr_decrease_epoch', type=int, default=10, help='lr decrease at certain epoch and its multiple')
         self.parser.add_argument('--lr_decrease_factor', type=float, default=0.5, help='lr decrease factor, for classification default 0.1')
-        self.parser.add_argument('--lambda_l1', type=float, default=100, help='the parameter of L1Loss')
+        self.parser.add_argument('--lambda_l1', type=float, default=10, help='the parameter of L1Loss')
         self.parser.add_argument('--lambda_perceptual', type=float, default=10, help='the parameter of FML1Loss (perceptual loss)')
         self.parser.add_argument('--lambda_gan', type=float, default=1, help='the parameter of valid loss of AdaReconL1Loss; 0 is recommended')
         self.parser.add_argument('--num_workers', type=int, default=4, help='number of cpu threads to use during batch generation')
@@ -75,10 +76,10 @@ class TrainOptions:
 
         args = vars(self.opt)
 
-        print("-" * 20 + " Options " + "-" * 20)
-        for k, v in sorted(args.items()):
-            print(str(k), ":", str(v))
-        print("-" * 20 + " End " + "-" * 20)
+        # print("-" * 20 + " Options " + "-" * 20)
+        # for k, v in sorted(args.items()):
+        #     print(str(k), ":", str(v))
+        # print("-" * 20 + " End " + "-" * 20)
 
         return self.opt
 

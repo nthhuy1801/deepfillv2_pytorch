@@ -9,7 +9,7 @@ import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
 from models.model import weights_init
 from utils.utils import create_generator, create_discriminator, create_perceptualnet, save_sample_png
-from dataset.dataset import InpaintDataset
+from dataset.train_dataset import InpaintDataset
 
 def WGANTrainer(opt):
     """
@@ -144,24 +144,22 @@ def WGANTrainer(opt):
             # Get the deep semantic feature maps, and compute Perceptual Loss
             img_featuremaps = perceptualnet(img)                            # feature maps
             second_out_wholeimg_featuremaps = perceptualnet(second_out_whole_img)
-            second_PerceptualLoss = L1_loss(second_out_wholeimg_featuremaps, img_featuremaps)
+            sec_percept_loss = L1_loss(second_out_wholeimg_featuremaps, img_featuremaps)
 
             # Compute losses
             loss = opt.lambda_l1 * first_MaskL1Loss + opt.lambda_l1 * second_MaskL1Loss + \
-                        opt.lambda_perceptual * second_PerceptualLoss + opt.lambda_gan * GAN_Loss
+                        opt.lambda_perceptual * sec_percept_loss + opt.lambda_gan * GAN_Loss
             loss.backward()
             optimizer_g.step()
 
-            # Determine approximate time left
-            batches_done = epoch * len(dataloader) + batch_idx
-            batches_left = opt.epochs * len(dataloader) - batches_done
+            # Time execute
             time_left = time.time() - start_time
             start_time = time.time()
 
             # Print log
             print("\r[Epoch {}/{}] [Batch {}/{}] [First Mask L1 Loss: {:.4f}] [Second Mask L1 Loss: {:.4f}]".format((epoch + 1), opt.epochs, batch_idx, len(dataloader), first_MaskL1Loss.item(), second_MaskL1Loss.item()))
-            print("\r[D Loss: {:.4f}] [G Loss: {:.4f}] [Perceptual Loss: {:.4f}] time_left: {}" .format(
-                loss_D.item(), GAN_Loss.item(), second_PerceptualLoss.item(), time_left))
+            print("\r[D Loss: {:.4f}] [G Loss: {:.4f}] [Perceptual Loss: {:.4f}] Time: {}s" .format(
+                loss_D.item(), GAN_Loss.item(), sec_percept_loss.item(), time_left))
             print('-'*50)
         # Learning rate decrease
         adjust_learning_rate(opt.lr_g, optimizer_g, (epoch + 1), opt)
@@ -171,7 +169,7 @@ def WGANTrainer(opt):
         save_model_generator(generator, (epoch + 1), opt)
         save_model_disc(discriminator, (epoch + 1), opt)
 
-        ### Sample data every epoch
+        # Sample data every epoch
         masked_img = img * (1 - mask) + mask
         mask = torch.cat((mask, mask, mask), 1)
         if (epoch + 1) % 1 == 0:

@@ -2,12 +2,7 @@
 import os
 import sys
 from tkinter import ALL
-myDir = os.getcwd()
-sys.path.append(myDir)
-from pathlib import Path
-path = Path(myDir)
-a=str(path.parent.absolute())
-sys.path.append(a)
+
 # -------------------------
 
 import torch
@@ -58,7 +53,8 @@ if __name__=='__main__':
     args = {
         'baseroot':'/home/huynth/deepfillv2_thesis/data/place2',
         'mask_dir':'/home/huynth/deepfillv2_thesis/data/mask',
-        'img_size': 256
+        'image_size': 256,
+        'mask_type' : 'free_form'
     }
     args = AttrDict(args)
     data = InpaintDataset(args)
