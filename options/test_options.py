@@ -25,6 +25,7 @@ class TestOptions():
         self.parser.add_argument('--norm', type = str, default = 'in', help = 'normalization type')
         self.parser.add_argument('--init_type', type = str, default = 'kaiming', help = 'network initialization [normal|xavier|kaiming|orthogonal]')
         self.parser.add_argument('--init_gain', type = float, default = 0.02, help = 'the initialization gain')
+        self.parser.add_argument('--results_path', type = str, default = './results', help = 'testing samples path that is a folder')
         self.initialized = True
 
     def parse(self):
