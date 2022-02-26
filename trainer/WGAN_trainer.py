@@ -1,11 +1,7 @@
 import os
 import time
-import datetime
-import pickle as pkl
 import torch
-import numpy as np
 import torch.nn as nn
-import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
 from models.model import weights_init
 from utils.utils import create_generator, create_discriminator, create_perceptualnet, save_sample_png

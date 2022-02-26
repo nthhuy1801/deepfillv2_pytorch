@@ -1,13 +1,26 @@
 import cv2
 import numpy as np
 
+def generate_rect_mask(im_size, mask_size, margin=8, rand_mask=True):
+    mask = np.zeros((im_size[0], im_size[1])).astype(np.float32)
+    if rand_mask:
+        sz0, sz1 = mask_size[0], mask_size[1]
+        of0 = np.random.randint(margin, im_size[0] - sz0 - margin)
+        of1 = np.random.randint(margin, im_size[1] - sz1 - margin)
+    else:
+        sz0, sz1 = mask_size[0], mask_size[1]
+        of0 = (im_size[0] - sz0) // 2
+        of1 = (im_size[1] - sz1) // 2
+    mask[of0:of0+sz0, of1:of1+sz1] = 1
+    mask = np.expand_dims(mask, axis=0)
+    mask = np.expand_dims(mask, axis=0)
+    rect = np.array([[of0, sz0, of1, sz1]], dtype=int)
+    return mask, rect
+
+
 
 def create_ff_mask(shape, max_angle = 4, max_len = 40, max_width = 10, times = 15):
     '''Create free form mask'''
-    # config={'img_shape': [256, 256], 'times': 15, 'ma': 4.0, 'ml': 40, 'mbw': 5}
-    # h,w = config['img_shape']
-    # mask = np.zeros((h,w))
-    # num_v = np.random.randint(config['times'])
     height = shape
     width = shape
     mask = np.zeros((height, width), np.float32)
@@ -18,7 +31,7 @@ def create_ff_mask(shape, max_angle = 4, max_len = 40, max_width = 10, times = 1
         start_y = np.random.randint(height)
         for j in range(1 + np.random.randint(5)):
             angle = 0.01 + np.random.randint(max_angle)
-            if i%2==0:
+            if i % 2==0:
                 angle = 2 * 3.1415926 - angle
             length = 10 + np.random.randint(max_len)
             brush_w = 5 + np.random.randint(max_width)
@@ -33,6 +46,7 @@ def create_ff_mask(shape, max_angle = 4, max_len = 40, max_width = 10, times = 1
     # cv2.imwrite(f'mask/ff_mask{i}.png', mask)
     # cv2.imshow('free form', mask)
     # cv2.waitKey(0)
+
 
 
 def random_bbox(shape, margin, bbox_shape):
@@ -54,21 +68,7 @@ def random_bbox(shape, margin, bbox_shape):
     w = width
     return (t, l, h, w)
 
-# def bbox2mask(shape, margin, bbox_shape):
-#     bboxs = []
-#     for i in range(20):
-#         bbox = random_bbox(shape, margin, bbox_shape)
-#         bboxs.append(bbox)
 
-#     height, width = shape
-#     mask = np.zeros((height, width), np.float32)
-#     for bbox in bboxs:
-#         h = int(bbox[2] * 0.1) + np.random.randint(int(bbox[2] * 0.2 + 1))
-#         w = int(bbox[3] * 0.1) + np.random.randint(int(bbox[3] * 0.2) + 1)
-#         mask[(bbox[0] + h) : (bbox[0] + bbox[2] - h), (bbox[1] + w) : (bbox[1] + bbox[3] - w)] = 255.
-
-#     mask = mask.astype(np.uint8)
-#     # cv2.imwrite("./input/mask.png", mask)
 
 def bbox2mask(shape, margin, bbox_shape, times):
         """Generate mask tensor from bbox.
@@ -95,5 +95,4 @@ def bbox2mask(shape, margin, bbox_shape, times):
         # cv2.waitKey(0)
 
 if __name__=='__main__':
-    # create_ff_mask(shape=[256,256], max_angle=4, max_width=15, max_len=40, times=15)
     bbox2mask(shape=[256,256], margin=[10,10], bbox_shape=[30,30], times=1)
