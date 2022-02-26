@@ -7,4 +7,4 @@ opt = TrainOptions().parse()
 # print options to help debugging
 print(' '.join(sys.argv))
 
-model = WGANTrainer(opt).train(opt)
+model = WGANTrainer(opt)
