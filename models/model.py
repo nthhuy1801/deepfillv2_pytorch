@@ -9,6 +9,7 @@ sys.path.append(a)
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from models.module import *
 from torchvision.models import vgg16
 
@@ -165,7 +166,7 @@ class Generator(nn.Module):
         refine_attention = self.refine_atten2(refine_attention)
         second_out = torch.cat([refine_conv, refine_attention], dim=1)
         second_out = self.refine_combine(second_out)
-        second_out = nn.functional.interpolate(second_out, (img.shape[2], img.shape[3]))
+        second_out = F.interpolate(second_out, (img.shape[2], img.shape[3]))
         return first_out, second_out
 
 

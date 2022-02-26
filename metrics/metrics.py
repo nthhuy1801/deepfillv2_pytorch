@@ -10,8 +10,7 @@ import pickle
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # MAE
-def compare_mae(pairs):
-    real, fake = pairs
+def compare_mae(real, fake):
     real, fake = real.astype(np.float32), fake.astype(np.float32)
     return np.sum(np.abs(real - fake)) / np.sum(real + fake)
 
