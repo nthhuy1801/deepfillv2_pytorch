@@ -21,7 +21,7 @@ class TestOptions():
         self.parser.add_argument('--out_channels', type = int, default = 3, help = 'output RGB image')
         self.parser.add_argument('--latent_channels', type = int, default = 48, help = 'latent channels')
         self.parser.add_argument('--pad_type', type = str, default = 'zero', help = 'the padding type')
-        self.parser.add_argument('--activation', type = str, default = 'lrelu', help = 'the activation type')
+        self.parser.add_argument('--activation', type = str, default = 'ELU', help = 'the activation type')
         self.parser.add_argument('--norm', type = str, default = 'in', help = 'normalization type')
         self.parser.add_argument('--init_type', type = str, default = 'kaiming', help = 'network initialization [normal|xavier|kaiming|orthogonal]')
         self.parser.add_argument('--init_gain', type = float, default = 0.02, help = 'the initialization gain')

@@ -11,7 +11,7 @@ class TrainOptions:
         # Network parameters
         self.parser.add_argument('--in_channels', type=int, default=4, help='The input of RGB image + 1 channel of mask')
         self.parser.add_argument('--out_channels', type=int, default=3, help='Output RGB image')
-        self.parser.add_argument('--latent_channels', type=int, default=64, help='Latent channels')
+        self.parser.add_argument('--latent_channels', type=int, default=48, help='Latent channels')
         self.parser.add_argument('--pad_type', type=str, default='zero', help='Padding types: zero, reflect, replicate')
         self.parser.add_argument('--activation', type=str, default='ELU', help='Activation types: ReLU, LeakyReLU, ELU, SELU, PReLU, Tanh, Sigmoid, none')
         self.parser.add_argument('--norm', type=str, default = 'in', help = 'normalization type')
@@ -22,7 +22,7 @@ class TrainOptions:
         self.parser.add_argument('--mask_type', type=str, default='free_form', help='Mask type: free form, bounding box')
         self.parser.add_argument('--image_size', type=int, default=256, help='Resize image in training set to this size')
         self.parser.add_argument('--dataset', type=str, default='celeba-hq', help="Dataset name for training")
-        self.parser.add_argument('--mask_num', type = int, default = 15, help = 'number of mask')
+        self.parser.add_argument('--mask_num', type = int, default = 20, help = 'number of mask')
         self.parser.add_argument('--margin', type = int, default = 10, help = 'margin of image')
         self.parser.add_argument('--bbox_shape', type = int, default = 30, help = 'margin of image for bbox mask')
         self.parser.add_argument('--max_angle', type = int, default = 4, help = 'parameter of angle for free form mask')

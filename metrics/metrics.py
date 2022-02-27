@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import skimage
+from skimage.metrics import structural_similarity as SSIM
 from inception import InceptionV3
 from tqdm import tqdm
 from torch.autograd import Variable
@@ -11,6 +12,8 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # MAE
 def compare_mae(real, fake):
+    real = real.cpu().numpy()
+    fake = fake.cpu().numpy()
     real, fake = real.astype(np.float32), fake.astype(np.float32)
     return np.sum(np.abs(real - fake)) / np.sum(real + fake)
 
@@ -27,7 +30,7 @@ def ssim(pred, target):
     target = target.clone().data.permute(0, 2, 3, 1).cpu().numpy()
     target = target[0]
     pred = pred[0]
-    ssim = skimage.measure.compare_ssim(target, pred, multichannel=True)
+    ssim = SSIM(target, pred, multichannel=True)
     return ssim
 
 

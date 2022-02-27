@@ -176,7 +176,7 @@ class Discriminator(nn.Module):
         super(Discriminator, self).__init__()
         # Down sample
         self.block1 = Conv2dLayer(opt.in_channels, opt.latent_channels, 7, 1, 3,
-                    pad_type=opt.pad_type, activation=opt.activation, norm=opt.norm, sn=True)
+                    pad_type=opt.pad_type, activation=opt.activation, norm='none', sn=True)
         self.block2 = Conv2dLayer(opt.latent_channels, opt.latent_channels * 2, 4, 2, 1,
                     pad_type=opt.pad_type, activation=opt.activation, norm=opt.norm, sn=True)
         self.block3 = Conv2dLayer(opt.latent_channels * 2, opt.latent_channels * 4, 4, 2, 1,
@@ -231,11 +231,10 @@ if __name__ == "__main__":
         'out_channels': 3,
         'pad_type': 'zero',
         'activation': 'ReLU',
-        'norm': 'in'
+        'norm': 'none'
     }
     args = AttrDict(args)
     # model = Generator(args)
     # print(summary(model, [(3,256,256), (1,256,256)]))
     model = Discriminator(args)
-    # print(model)
     print(summary(model, [(3,256,256), (1,256,256)]))
