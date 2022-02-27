@@ -218,8 +218,8 @@ class PerceptualNetwork(nn.Module):
     def forward(self, x):
         x = (x-self.mean) / self.std
         x = self.transform(x, mode='bilinear', size=(224, 224), align_corners=False)
-        for block_ in self.block:
-            x = block_(x)
+        for block in self.block:
+            x = block(x)
         return x
         
 if __name__ == "__main__":
