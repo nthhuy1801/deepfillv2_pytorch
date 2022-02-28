@@ -252,7 +252,7 @@ class SpectralNorm(nn.Module):
 
 class ContextualAttention(nn.Module):
     def __init__(self, ksize=3, stride=1, rate=1, fuse_k=3, softmax_scale=10,
-                 fuse=True, use_cuda=False, device_ids=None):
+                 fuse=True, use_cuda=True, device_ids=None):
         super(ContextualAttention, self).__init__()
         self.ksize = ksize
         self.stride = stride
