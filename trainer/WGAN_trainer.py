@@ -50,7 +50,6 @@ def WGANTrainer(opt):
         
     # Save the two-stage generator model
     def save_model_generator(net, epoch, opt):
-        """Save the model at "checkpoint_interval" and its multiple"""
         model_name = 'deepfillv2_G_epoch%d_batchsize%d.pth' % (epoch, opt.batch_size)
         model_name = os.path.join(save_folder, model_name)
         if epoch%opt.checkpoint_interval==0:

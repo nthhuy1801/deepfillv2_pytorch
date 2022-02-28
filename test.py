@@ -26,8 +26,8 @@ def Inpain_Test(opt):
         os.makedirs(opt.results_path)
 
     # Load model for testing
-    generator = create_generator(opt).eval()
-    load_model(generator, opt.epoch, opt)
+    generator = create_generator(opt).eval().to(device)
+    load_model(generator, opt.epochs, opt)
     print("Load pretrained model generator")
 
 
@@ -81,3 +81,8 @@ def Inpain_Test(opt):
     print("MAE value: {}".format(mae_total/num_img))
     print("PSNR value: {}".format(psnr_total/num_img))
     print("SSIM value: {}".format(ssim_total/num_img))
+
+
+if __name__=='__main__':
+    opt = TestOptions().parse()
+    Inpain_Test(opt)

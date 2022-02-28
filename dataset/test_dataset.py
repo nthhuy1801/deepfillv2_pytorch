@@ -19,7 +19,7 @@ class TestInpaintDataset(Dataset):
         self.mask_list = []
         for root, dirs, files in os.walk(opt.maskroot):
             for filepaths in files:
-                self.img_list.append(os.path.join(root, filepaths))
+                self.mask_list.append(os.path.join(root, filepaths))
         self.mask_list = sorted(self.mask_list)
 
     def __len__(self):
@@ -34,6 +34,7 @@ class TestInpaintDataset(Dataset):
         img = cv2.resize(img, (self.opt.image_size, self.opt.image_size))
         # Read mask
         mask = cv2.imread(self.mask_list[index])[:, :, 0]
+        mask = cv2.resize(mask, (self.opt.image_size, self.opt.image_size))
         # To tensor
         img = torch.from_numpy(img.astype(np.float32) / 255.0).permute(2, 0, 1).contiguous()
         mask = torch.from_numpy(mask.astype(np.float32)).unsqueeze(0).contiguous()

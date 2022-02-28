@@ -107,7 +107,7 @@ def create_perceptualnet():
     # Get the first 15 layers of vgg16, which is conv3_3
     perceptualnet = model.PerceptualNetwork()
     # Pre-trained VGG-16
-    vgg16 = torch.load('./vgg16-397923af.pth')
+    vgg16 = torch.load('/root/.cache/torch/hub/checkpoints/vgg16-397923af.pth')
     load_dict(perceptualnet, vgg16)
     # It does not gradient
     for param in perceptualnet.parameters():
