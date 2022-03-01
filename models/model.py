@@ -166,7 +166,7 @@ class Generator(nn.Module):
         # img: entire img
         # mask: 1 for mask region; 0 for unmask region
         # Coarse
-        print(img.shape, mask.shape)
+        # print(img.shape, mask.shape)
         first_masked_img = img * (1 - mask) + mask
         first_in = torch.cat([first_masked_img, mask], dim=1)       # in: [B, 4, H, W]
         first_out = self.coarse(first_in)                           # out: [B, 3, H, W]
