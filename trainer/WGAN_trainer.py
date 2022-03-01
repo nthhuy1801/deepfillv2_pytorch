@@ -156,10 +156,13 @@ def WGANTrainer(opt):
             print("\r[D Loss: {:.4f}] [G Loss: {:.4f}] [Perceptual Loss: {:.4f}] Time: {}s" .format(
                 loss_D.item(), GAN_Loss.item(), sec_percept_loss.item(), time_left))
             print('-'*50)
+            if (batch_idx + 1) % 1000 == 0:
+                torch.save(generator.state_dict(), 'deepfillv2_G_epoch%d_batchsize%d_batchidx%d.pth' % (epoch, opt.batch_size, batch_idx))
+                torch.save(discriminator.state_dict(), 'deepfillv2_D_epoch%d_batchsize%d_batchidx%d.pth' % (epoch, opt.batch_size, batch_idx))
+
         # Learning rate decrease
         adjust_learning_rate(opt.lr_g, optimizer_g, (epoch + 1), opt)
         adjust_learning_rate(opt.lr_d, optimizer_d, (epoch + 1), opt)
-
         # Save the model
         save_model_generator(generator, (epoch + 1), opt)
         save_model_disc(discriminator, (epoch + 1), opt)

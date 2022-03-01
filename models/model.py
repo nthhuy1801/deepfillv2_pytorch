@@ -249,7 +249,7 @@ if __name__ == "__main__":
         'norm': 'none'
     }
     args = AttrDict(args)
-    model = Generator(args)
-    print(summary(model, [(3,128,128), (1,128,128)]))
-    # model = Discriminator(args)
-    # print(summary(model, [(3,256,256), (1,256,256)]))
+    # model = Generator(args)
+    # print(summary(model, [(3,128,128), (1,128,128)]))
+    model = Discriminator(args)
+    print(summary(model, [(3,256,256), (1,256,256)]))
