@@ -1,5 +1,5 @@
 import sys
-from trainer.WGAN_trainer import *
+from trainer.trainer import *
 from options.train_options import TrainOptions
 
 opt = TrainOptions().parse()
