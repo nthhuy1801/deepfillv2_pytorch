@@ -222,7 +222,7 @@ class GatedConv2d(nn.Module):
 
 class TransposeGatedConv2d(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride = 1, padding = 0, 
-        dilation = 1, pad_type = 'zero', activation = 'ELU', norm = 'none', sn = True, scale_factor = 2):
+        dilation = 1, pad_type = 'zero', activation = 'LeakyReLU', norm = 'none', sn = True, scale_factor = 2):
         super(TransposeGatedConv2d, self).__init__()
         # Initialize the conv scheme
         self.scale_factor = scale_factor

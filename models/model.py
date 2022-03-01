@@ -166,6 +166,7 @@ class Generator(nn.Module):
         # img: entire img
         # mask: 1 for mask region; 0 for unmask region
         # Coarse
+        print(img.shape, mask.shape)
         first_masked_img = img * (1 - mask) + mask
         first_in = torch.cat([first_masked_img, mask], dim=1)       # in: [B, 4, H, W]
         first_out = self.coarse(first_in)                           # out: [B, 3, H, W]
@@ -249,6 +250,6 @@ if __name__ == "__main__":
     }
     args = AttrDict(args)
     model = Generator(args)
-    print(summary(model, [(3,256,256), (1,256,256)]))
+    print(summary(model, [(3,128,128), (1,128,128)]))
     # model = Discriminator(args)
     # print(summary(model, [(3,256,256), (1,256,256)]))

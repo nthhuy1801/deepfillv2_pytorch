@@ -33,12 +33,12 @@ def create_ff_mask(shape, max_angle = 4, max_len = 40, max_width = 10, times = 1
             angle = 0.01 + np.random.randint(max_angle)
             if i % 2==0:
                 angle = 2 * 3.1415926 - angle
-            length = 10 + np.random.randint(max_len)
-            brush_w = 5 + np.random.randint(max_width)
+            length = 10 + np.random.randint(max_len - 20, max_len)
+            brush_w = 5 + np.random.randint(max_width - 30, max_width)
             end_x = (start_x + length * np.sin(angle)).astype(np.int32)
             end_y = (start_y + length * np.cos(angle)).astype(np.int32)
 
-            cv2.line(mask, (start_y, start_x), (end_y, end_x), 255.0, brush_w)
+            cv2.line(mask, (start_y, start_x), (end_y, end_x), 1.0, brush_w)
             start_x, start_y = end_x, end_y
 
     return mask.reshape((1, ) + mask.shape).astype(np.float32)
