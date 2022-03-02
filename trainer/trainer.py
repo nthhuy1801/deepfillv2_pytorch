@@ -31,7 +31,6 @@ def WGANTrainer(opt):
 
     # Loss function
     L1_loss = nn.L1Loss()
-    mse_loss = nn.MSELoss()
 
     
     # Set up Adam optimizers for G & D
@@ -157,8 +156,8 @@ def WGANTrainer(opt):
                 loss_D.item(), GAN_Loss.item(), sec_percept_loss.item(), time_left))
             print('-'*50)
             if (batch_idx + 1) % 1000 == 0:
-                torch.save(generator.state_dict(), 'deepfillv2_G_epoch%d_batchsize%d_batchidx%d.pth' % (epoch, opt.batch_size, batch_idx))
-                torch.save(discriminator.state_dict(), 'deepfillv2_D_epoch%d_batchsize%d_batchidx%d.pth' % (epoch, opt.batch_size, batch_idx))
+                torch.save(generator.state_dict(), os.path.join(save_folder,'deepfillv2_G_epoch%d_batchsize%d_batchidx%d.pth' % (epoch+1, opt.batch_size, batch_idx+1)))
+                torch.save(discriminator.state_dict(), os.path.join(save_folder, 'deepfillv2_D_epoch%d_batchsize%d_batchidx%d.pth' % (epoch+1, opt.batch_size, batch_idx+1)))
 
         # Learning rate decrease
         adjust_learning_rate(opt.lr_g, optimizer_g, (epoch + 1), opt)
