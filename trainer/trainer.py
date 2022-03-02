@@ -138,8 +138,8 @@ def WGANTrainer(opt):
 
             # Get the deep semantic feature maps, and compute Perceptual Loss
             img_featuremaps = perceptualnet(img)                            # feature maps
-            second_out_wholeimg_featuremaps = perceptualnet(second_out_whole_img)
-            sec_percept_loss = L1_loss(second_out_wholeimg_featuremaps, img_featuremaps)
+            second_out_featuremaps = perceptualnet(second_out)
+            sec_percept_loss = L1_loss(second_out_featuremaps, img_featuremaps)
 
             # Compute losses
             loss = opt.lambda_l1 * first_MaskL1Loss + opt.lambda_l1 * second_MaskL1Loss + \
