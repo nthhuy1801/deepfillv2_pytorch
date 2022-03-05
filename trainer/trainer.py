@@ -41,8 +41,6 @@ def WGANTrainer(opt):
 
     # Learning rate decrease
     def adjust_learning_rate(lr_in, optimizer, epoch, opt):
-        """Set the learning rate to the initial LR decayed by 
-        "lr_decrease_factor" every "lr_decrease_epoch" epochs"""
         lr = lr_in * (opt.lr_decrease_factor ** (epoch // opt.lr_decrease_epoch))
         for param_group in optimizer.param_groups:
             param_group['lr'] = lr
@@ -137,7 +135,7 @@ def WGANTrainer(opt):
 
             # Get the deep semantic feature maps, and compute Perceptual Loss
             img_featuremaps = perceptualnet(img)                            # feature maps
-            second_out_featuremaps = perceptualnet(second_out)
+            second_out_featuremaps = perceptualnet(second_out_whole_img)
             sec_percept_loss = L1_loss(second_out_featuremaps, img_featuremaps)
 
             # Compute losses
