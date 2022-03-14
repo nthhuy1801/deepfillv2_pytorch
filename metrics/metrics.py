@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import skimage
 from skimage.metrics import structural_similarity as SSIM
-from inception import InceptionV3
+from .inceptioninception import InceptionV3
 from tqdm import tqdm
 from torch.autograd import Variable
 import os

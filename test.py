@@ -17,8 +17,8 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def Inpain_Test(opt):
     def load_model(generator, epoch, opt):
-        model_name = 'deepfillv2_WGAN_G_epoch%d_batchsize%d.pth' % (epoch, opt.batch_size)
-        model_name = os.path.join('pretrained_model', model_name)
+        model_name = 'deepfillv2_G_epoch%d_batchsize%d.pth' % (epoch, opt.batch_size)
+        model_name = os.path.join('save_models', model_name)
         pre_dict = torch.load(model_name)
         generator.load_state_dict(pre_dict)
 

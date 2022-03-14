@@ -17,6 +17,7 @@ class TestOptions():
         self.parser.add_argument('--batch_size', type=int, default=1, help='Batch size uses during training')
         self.parser.add_argument('--load_name', type = str, default = './save_models/deepfillv2_G_epoch7_batchsize16.pth', help = 'test model name')
         # Network parameters
+        self.parser.add_argument('--epochs', type=int, default=40, help='Numbers of epochs training')
         self.parser.add_argument('--in_channels', type = int, default = 4, help = 'input RGB image + 1 channel mask')
         self.parser.add_argument('--out_channels', type = int, default = 3, help = 'output RGB image')
         self.parser.add_argument('--latent_channels', type = int, default = 48, help = 'latent channels')
