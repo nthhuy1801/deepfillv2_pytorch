@@ -93,10 +93,8 @@ def WGANTrainer(opt):
     # Initialize start time
     start_time = time.time()
 
-    # Create Tensor cuda
-    # Tensor = torch.cuda.FloatTensor
 
-        # training loop
+    # training loop
     for epoch in range(opt.resume_epoch, opt.epochs):
         for batch_idx, (img, mask) in enumerate(dataloader):
             # Load mask (shape: [B, 1, H, W]), masked_img (shape: [B, 3, H, W]), 

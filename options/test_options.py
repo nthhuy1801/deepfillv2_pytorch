@@ -15,7 +15,7 @@ class TestOptions():
         self.parser.add_argument('--num_workers', type=int, default=4, help='number of cpu threads to use during batch generation')
 
         self.parser.add_argument('--batch_size', type=int, default=1, help='Batch size uses during training')
-        self.parser.add_argument('--load_name', type = str, default = './save_models/deepfillv2_G_epoch7_batchsize16.pth', help = 'test model name')
+        self.parser.add_argument('--load_name', type = str, default = './save_models/free_form/deepfillv2_G_epoch40_batchsize16.pth', help = 'test model name')
         # Network parameters
         self.parser.add_argument('--epochs', type=int, default=40, help='Numbers of epochs training')
         self.parser.add_argument('--in_channels', type = int, default = 4, help = 'input RGB image + 1 channel mask')
