@@ -22,7 +22,7 @@ class InpaintDataset(Dataset):
         #         self.img_list.append(os.path.join(root, filepaths))
 
         # # Nếu dataset là Places2"
-        for img in glob.glob(os.path.join(opt.baseroot, "**/**/extra_train_*.jpg")):
+        for img in glob.glob(os.path.join(opt.baseroot, "**/**/**/*.jpg")):
             self.img_list.append(img)
     
     def __len__(self):
