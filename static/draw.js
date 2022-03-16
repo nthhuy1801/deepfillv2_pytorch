@@ -1,11 +1,11 @@
 // get reference to canvas and save canvas offsets
 var canvas = document.getElementById('drawing');
 var offsetX = canvas.offsetLeft;
-var offsetY = canvas.offsetTop + 60;
+var offsetY = canvas.offsetTop + 165;
 
 $(window).resize(function () {
     offsetX = canvas.offsetLeft;
-    offsetY = canvas.offsetTop + 60;
+    offsetY = canvas.offsetTop + 165;
 });
 
 function clear_canvas() {
@@ -30,7 +30,7 @@ function PrimitiveBrush(context) {
     this.lastLength = 0;
     this.isTouching = false;
 
-    // init context
+    // Init context
     this.ctx.strokeStyle = '#FFF';
     this.ctx.lineWidth = '25';
     this.ctx.lineCap = this.ctx.lineJoin = 'round';
