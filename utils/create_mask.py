@@ -57,9 +57,12 @@ def random_bbox(shape, margin, bbox_shape):
     Returns:
         tuple: (top, left, height, width)
     """
-    img_height, img_width = shape
-    height, width = bbox_shape
-    ver_margin, hor_margin = margin
+    img_height = shape
+    img_width = shape
+    height = bbox_shape
+    width = bbox_shape
+    ver_margin = margin
+    hor_margin = margin
     maxt = img_height - ver_margin - height
     maxl = img_width - hor_margin - width
     t = np.random.randint(low = ver_margin, high = maxt)
@@ -83,8 +86,8 @@ def bbox2mask(shape, margin, bbox_shape, times):
         for i in range(times):
             bbox = random_bbox(shape, margin, bbox_shape)
             bboxs.append(bbox)
-        height = shape[0]
-        width = shape[1]
+        height = shape
+        width = shape
         mask = np.zeros((height, width), np.float32)
         for bbox in bboxs:
             h = int(bbox[2] * 0.1) + np.random.randint(int(bbox[2] * 0.2 + 1))

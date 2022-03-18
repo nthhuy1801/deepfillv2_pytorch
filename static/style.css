@@ -1,0 +1,185 @@
+/* Reset CSS */
+
+/* * {
+    padding: 0;
+    width: 0;
+    box-sizing: border-box;
+} */
+
+html {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+body {
+    background-color: #efefef;;
+}
+
+#header {
+    background-color: #04aa6b;
+    position: fixed;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    line-height: 30px;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.logo-bk {
+    background-position: left;
+    height: 100px;
+    width: 100px;
+    display: block;
+    padding: 15px;
+    float: left;
+    backface-visibility: hidden;
+}
+
+.middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    text-align: center;
+    top: 40px;
+    left: 10px;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%)
+}
+
+#header:hover .logo-bk {
+    opacity: 0.3;
+    background-color: pink;
+}
+
+#header:hover .middle {
+    opacity: 1;
+}
+
+.text {
+    background-color: red;
+    color: #000;
+    font-size: 16px;
+    display: block;
+    position: relative;
+    padding-left: 30px;
+}
+
+h3 {
+    font-size: 30px;
+    display: inline-block;
+} 
+
+.row {
+    margin: 0;
+}
+.col-img .div-img {
+    margin-top: 100px;
+    position: relative;
+}
+
+/* .col-text {
+    position: absolute;
+    left: 50%;
+    top: 70%;
+    transform: translate(-50%, -50%)
+} */
+
+canvas {
+    position: absolute;
+    margin-left: -384px;
+}
+
+.row-result {
+    display: none;
+}
+
+.row #input_file {
+    display: none;
+}
+
+.row label {
+    color: black;
+    text-align: center;
+    background-color: white;
+    position: relative;
+    border: 2px solid #008CBA;
+    padding: 16px 32px;
+    height: 35px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    width: 100px;
+    display: inline-block;
+}
+
+.row label:hover {
+    background-color: #008CBA;
+    color: white;
+}
+
+.btn {
+    background-color: #008CBA; 
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    width: 54px;
+}
+
+
+/* .btn-upload {
+    background-color: white; 
+    color: black; 
+    border: 2px solid #008CBA;
+}
+  
+.btn-upload:hover {
+    background-color: #008CBA;
+    color: white;
+} */
+
+.btn-process {
+    background-color: white; 
+    color: black; 
+    border: 2px solid #4CAF50;
+}
+
+.btn-process:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-clear {
+    background-color: white; 
+    color: black; 
+    border: 2px solid #f44336;
+}
+
+.btn-clear:hover {
+    background-color: #f44336;
+    color: white;
+}
+
+
+.div-img {
+    text-align: center;
+    top: 50px;
+}
+.div-img #img-raw {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+
+.img_result {
+    margin: 10px;
+    border: solid 0.5px;
+}

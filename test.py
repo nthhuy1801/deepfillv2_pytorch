@@ -9,7 +9,7 @@ from metrics.metrics import *
 from utils.utils import save_sample_png
 
 opt = TestOptions().parse()
-print(opt)
+# print(opt)
 
 # Device
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -17,9 +17,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def Inpain_Test(opt):
     def load_model(generator, epoch, opt):
-        model_name = 'deepfillv2_WGAN_G_epoch%d_batchsize%d.pth' % (epoch, opt.batch_size)
-        model_name = os.path.join('pretrained_model', model_name)
-        pre_dict = torch.load(model_name)
+        pre_dict = torch.load(opt.load_name)
         generator.load_state_dict(pre_dict)
 
     if not os.path.exists(opt.results_path):
@@ -33,6 +31,7 @@ def Inpain_Test(opt):
 
     testset = TestInpaintDataset(opt)
     num_img = TestInpaintDataset(opt).__len__()
+    print(f"Number of image {num_img}")
     # Load to dataloader
     dataloader = DataLoader(testset, batch_size=opt.batch_size, shuffle=False,
                 num_workers=opt.num_workers, pin_memory=True)
@@ -59,8 +58,8 @@ def Inpain_Test(opt):
 
         masked_img = img * (1 - mask) + mask
         mask = torch.cat((mask, mask, mask), 1)
-        img_list = [second_generated]
-        name_list = ["second_out"]
+        img_list = [masked_img, first_out, second_generated]
+        name_list = ["masked_img", "first_out","second_out"]
 
         # MAE
         mae = compare_mae(img, second_generated)

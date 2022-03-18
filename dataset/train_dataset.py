@@ -1,7 +1,7 @@
 # -------------------------
 import os
 from tkinter import ALL
-
+import glob
 # -------------------------
 
 import torch
@@ -17,9 +17,13 @@ class InpaintDataset(Dataset):
         
         # Read folder, return full path
         self.img_list = []
-        for root, dirs, files in os.walk(opt.baseroot):
-            for filepaths in files:
-                self.img_list.append(os.path.join(root, filepaths))
+        # for root, dirs, files in os.walk(opt.baseroot):
+        #     for filepaths in files:
+        #         self.img_list.append(os.path.join(root, filepaths))
+
+        # # Nếu dataset là Places2"
+        for img in glob.glob(os.path.join(opt.baseroot, "**/**/**/extra_train_*.jpg")):
+            self.img_list.append(img)
     
     def __len__(self):
         return len(self.img_list)
