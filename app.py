@@ -41,6 +41,7 @@ def process():
 
         # Save mask
         mask_b64 = request.values[('mask_b64')]
+        print('Post success')
         img_str = mask_b64.split(',')[1]
         output = open(file_path_mask, 'wb')
         decoded = base64.b64decode(img_str)
@@ -69,4 +70,4 @@ def process():
         return jsonify({'status': 'error'})
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=9000, use_reloader=True, threaded=False)
+    app.run(host='0.0.0.0', port=8000, use_reloader=True, threaded=False)

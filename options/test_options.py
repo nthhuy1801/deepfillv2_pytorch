@@ -7,10 +7,10 @@ class TestOptions():
         self.initialized = False
 
     def initialize(self):
-        self.parser.add_argument('--baseroot', type=str, default='/home/huynth/deepfillv2_thesis/data/place2', help='the training image folder')
-        self.parser.add_argument('--maskroot', type=str, default='home/huynth/deepfillv2_thesis/mask')
+        self.parser.add_argument('--baseroot', type=str, default='./test_folder/img', help='the training image folder')
+        self.parser.add_argument('--maskroot', type=str, default='./test_folder/mask')
         self.parser.add_argument('--mask_type', type=str, default='free_form', help='Mask type: free form, bounding box')
-        self.parser.add_argument('--image_size', type=int, default=256, help='Resize image in training set to this size')
+        self.parser.add_argument('--image_size', type=int, default=128, help='Resize image in training set to this size')
         self.parser.add_argument('--dataset', type=str, default='celeba-hq', help="Dataset name for training")
         self.parser.add_argument('--num_workers', type=int, default=4, help='number of cpu threads to use during batch generation')
 
@@ -22,9 +22,9 @@ class TestOptions():
         self.parser.add_argument('--out_channels', type = int, default = 3, help = 'output RGB image')
         self.parser.add_argument('--latent_channels', type = int, default = 48, help = 'latent channels')
         self.parser.add_argument('--pad_type', type = str, default = 'zero', help = 'the padding type')
-        self.parser.add_argument('--activation', type = str, default = 'ELU', help = 'the activation type')
+        self.parser.add_argument('--activation', type = str, default = 'LeakyReLU', help = 'the activation type')
         self.parser.add_argument('--norm', type = str, default = 'in', help = 'normalization type')
-        self.parser.add_argument('--init_type', type = str, default = 'kaiming', help = 'network initialization [normal|xavier|kaiming|orthogonal]')
+        self.parser.add_argument('--init_type', type = str, default = 'xavier', help = 'network initialization [normal|xavier|kaiming|orthogonal]')
         self.parser.add_argument('--init_gain', type = float, default = 0.02, help = 'the initialization gain')
         self.parser.add_argument('--results_path', type = str, default = './results', help = 'testing samples path that is a folder')
         self.initialized = True

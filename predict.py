@@ -11,7 +11,7 @@ from PIL import Image
 opt = TestOptions().parse()
 
 def load_model(generator, epoch, opt):
-    pre_dict = torch.load(opt.load_name)
+    pre_dict = torch.load(opt.load_name, map_location='cpu')
     generator.load_state_dict(pre_dict)
 
     if not os.path.exists(opt.results_path):
