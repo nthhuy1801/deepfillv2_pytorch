@@ -1,8 +1,5 @@
 import base64
-from crypt import methods
-from fileinput import filename
 import os
-from tkinter.tix import IMAGE, Tree
 import cv2
 from flask import Flask, render_template, jsonify, request
 import numpy as np

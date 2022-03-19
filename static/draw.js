@@ -1,4 +1,3 @@
-// get reference to canvas and save canvas offsets
 var canvas = document.getElementById('drawing');
 var offsetX = canvas.offsetLeft;
 var offsetY = canvas.offsetTop + 165;
